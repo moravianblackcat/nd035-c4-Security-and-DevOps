@@ -5,7 +5,7 @@ import com.example.demo.model.persistence.User;
 import com.example.demo.model.requests.CreateUserRequest;
 import com.example.demo.service.CartService;
 import com.example.demo.service.UserService;
-import com.example.demo.service.exception.UserWithThisIdeWasNotFoundException;
+import com.example.demo.service.exception.UserWithThisIdWasNotFoundException;
 import com.example.demo.service.exception.UserWithThisUsernameAlreadyExistsException;
 import com.example.demo.service.exception.UserWithThisUsernameWasNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,7 +59,7 @@ public class UserControllerTest {
 
     @Test
     public void getUserByIdThrowsAnErrorIfUserDoesNotExist() throws Exception {
-        when(userService.findById(anyLong())).thenThrow(new UserWithThisIdeWasNotFoundException());
+        when(userService.findById(anyLong())).thenThrow(new UserWithThisIdWasNotFoundException());
 
         mockMvc.perform(get("/api/user/id/1"))
                 .andExpect(status().isNotFound())

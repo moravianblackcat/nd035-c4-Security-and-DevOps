@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.repositories.UserRepository;
-import com.example.demo.service.exception.UserWithThisIdeWasNotFoundException;
+import com.example.demo.service.exception.UserWithThisIdWasNotFoundException;
 import com.example.demo.service.exception.UserWithThisUsernameAlreadyExistsException;
 import com.example.demo.service.exception.UserWithThisUsernameWasNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,10 +47,10 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findByIdThrowsAnErrorIfUserDoesNotExists() {
+    public void findByIdThrowsAnErrorIfUserDoesNotExist() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(UserWithThisIdeWasNotFoundException.class, () -> cut.findById(1L));
+        assertThrows(UserWithThisIdWasNotFoundException.class, () -> cut.findById(1L));
     }
 
     @Test
