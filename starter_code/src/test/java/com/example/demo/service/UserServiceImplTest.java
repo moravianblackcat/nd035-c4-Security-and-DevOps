@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.repositories.UserRepository;
+import com.example.demo.service.exception.UserWithThisIdeWasNotFoundException;
 import com.example.demo.service.exception.UserWithThisUsernameAlreadyExistsException;
 import com.example.demo.service.exception.UserWithThisUsernameWasNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,6 +35,22 @@ public class UserServiceImplTest {
         user = new User();
         user.setId(1L);
         user.setUsername("TestUser");
+    }
+
+    @Test
+    public void findByIdReturnsCorrectUserIfExists() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        assertEquals(user,
+                cut.findById(1L),
+                "Find user by id operation didn't return an user, although it exists.");
+    }
+
+    @Test
+    public void findByIdThrowsAnErrorIfUserDoesNotExists() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(UserWithThisIdeWasNotFoundException.class, () -> cut.findById(1L));
     }
 
     @Test

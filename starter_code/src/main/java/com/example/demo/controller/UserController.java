@@ -1,11 +1,12 @@
-package com.example.demo.controllers;
+package com.example.demo.controller;
 
 import com.example.demo.model.persistence.Cart;
 import com.example.demo.model.persistence.User;
-import com.example.demo.model.persistence.repositories.CartRepository;
-import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
+import com.example.demo.service.CartService;
+import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,20 +15,19 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 	
 	@Autowired
-	private UserRepository userRepository;
-	
+	private CartService cartService;
+
 	@Autowired
-	private CartRepository cartRepository;
+	private UserService userService;
 
 	@GetMapping("/id/{id}")
-	public ResponseEntity<User> findById(@PathVariable Long id) {
-		return ResponseEntity.of(userRepository.findById(id));
+	public ResponseEntity<User> getUserById(@PathVariable Long id) {
+		return ResponseEntity.ok(userService.findById(id));
 	}
 	
 	@GetMapping("/{username}")
-	public ResponseEntity<User> findByUserName(@PathVariable String username) {
-		User user = userRepository.findByUsername(username);
-		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
+	public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+		return ResponseEntity.ok(userService.findByUsername(username));
 	}
 	
 	@PostMapping("/create")
@@ -35,10 +35,10 @@ public class UserController {
 		User user = new User();
 		user.setUsername(createUserRequest.getUsername());
 		Cart cart = new Cart();
-		cartRepository.save(cart);
+		cartService.saveCart(cart);
 		user.setCart(cart);
-		userRepository.save(user);
-		return ResponseEntity.ok(user);
+		user = userService.saveUser(user);
+		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
 	
 }
