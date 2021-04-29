@@ -33,6 +33,10 @@ public class User {
 		this.cart = cart;
 	}
 
+	public boolean hasEmptyCart() {
+		return cart.isEmpty();
+	}
+
 	public long getId() {
 		return id;
 	}

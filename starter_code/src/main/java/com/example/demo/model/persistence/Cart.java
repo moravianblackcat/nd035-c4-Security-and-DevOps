@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "cart")
@@ -38,6 +39,20 @@ public class Cart {
 		this.total = total;
 	}
 
+	public void addPrice(BigDecimal price) {
+		if (total == null) {
+			total = new BigDecimal(0.0);
+		}
+
+		total = total.add(price);
+	}
+
+	public void removePrice(BigDecimal price) {
+		if (total != null) {
+			total = total.subtract(price);
+		}
+	}
+
 	public User getUser() {
 		return user;
 	}
@@ -67,10 +82,6 @@ public class Cart {
 			items = new ArrayList<>();
 		}
 		items.add(item);
-		if(total == null) {
-			total = new BigDecimal(0);
-		}
-		total = total.add(item.getPrice());
 	}
 	
 	public void removeItem(Item item) {
@@ -78,9 +89,25 @@ public class Cart {
 			items = new ArrayList<>();
 		}
 		items.remove(item);
-		if(total == null) {
-			total = new BigDecimal(0);
-		}
-		total = total.subtract(item.getPrice());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Cart)) return false;
+		Cart cart = (Cart) o;
+		return id.equals(cart.id) &&
+				Objects.equals(items, cart.items) &&
+				user.equals(cart.user) &&
+				Objects.equals(total, cart.total);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, items, user, total);
+	}
+
+	public boolean isEmpty() {
+		return items == null || items.size() == 0;
 	}
 }

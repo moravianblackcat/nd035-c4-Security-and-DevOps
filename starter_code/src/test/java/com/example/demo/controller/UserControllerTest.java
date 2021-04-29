@@ -9,6 +9,7 @@ import com.example.demo.service.exception.UserWithThisIdWasNotFoundException;
 import com.example.demo.service.exception.UserWithThisUsernameAlreadyExistsException;
 import com.example.demo.service.exception.UserWithThisUsernameWasNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -101,7 +102,7 @@ public class UserControllerTest {
 
         User created = createUser(username, 1L);
 
-        when(userService.saveUser(ArgumentMatchers.any(User.class))).thenReturn(created);
+        when(userService.createNewUser(anyString())).thenReturn(created);
 
         mockMvc.perform(post("/api/user/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -112,32 +113,12 @@ public class UserControllerTest {
     }
 
     @Test
-    public void postNonExistingUserAlsoCreatesCart() throws Exception {
-        String username = "Test User";
-
-        CreateUserRequest request = createUserRequest(username);
-
-        User toBeCreated = new User();
-        toBeCreated.setUsername(username);
-
-        User created = createUser(username, 1L);
-
-        when(userService.saveUser(ArgumentMatchers.any(User.class))).thenReturn(created);
-
-        mockMvc.perform(post("/api/user/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
-
-        verify(cartService, times(1)).saveCart(any(Cart.class));
-    }
-
-    @Test
     public void postExistingUserThrowsAnError() throws Exception {
         String username = "Test User";
 
         CreateUserRequest request = createUserRequest(username);
 
-        when(userService.saveUser(ArgumentMatchers.any(User.class))).thenThrow(new UserWithThisUsernameAlreadyExistsException());
+        when(userService.createNewUser(anyString())).thenThrow(new UserWithThisUsernameAlreadyExistsException());
 
         mockMvc.perform(post("/api/user/create")
                 .contentType(MediaType.APPLICATION_JSON)

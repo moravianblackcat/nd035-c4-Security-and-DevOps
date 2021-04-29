@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.model.persistence.Cart;
 import com.example.demo.model.persistence.User;
+import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.service.exception.UserWithThisIdWasNotFoundException;
 import com.example.demo.service.exception.UserWithThisUsernameAlreadyExistsException;
@@ -13,6 +15,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @Override
     public User findById(long id) {
@@ -31,10 +36,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Cart getUserCartByUsername(String username) {
+        return findByUsername(username).getCart();
+    }
+
+    @Override
     public User saveUser(User user) {
         if (userRepository.existsUserByUsername(user.getUsername())) {
             throw new UserWithThisUsernameAlreadyExistsException();
         }
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User createNewUser(String username) {
+        User user = new User();
+        user.setUsername(username);
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        user.setCart(cart);
+
         return userRepository.save(user);
     }
 }

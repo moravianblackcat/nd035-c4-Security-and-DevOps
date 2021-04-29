@@ -21,23 +21,18 @@ public class UserController {
 	private UserService userService;
 
 	@GetMapping("/id/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable Long id) {
-		return ResponseEntity.ok(userService.findById(id));
+	public User getUserById(@PathVariable Long id) {
+		return userService.findById(id);
 	}
 	
 	@GetMapping("/{username}")
-	public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-		return ResponseEntity.ok(userService.findByUsername(username));
+	public User getUserByUsername(@PathVariable String username) {
+		return userService.findByUsername(username);
 	}
 	
 	@PostMapping("/create")
 	public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
-		User user = new User();
-		user.setUsername(createUserRequest.getUsername());
-		Cart cart = new Cart();
-		cartService.saveCart(cart);
-		user.setCart(cart);
-		user = userService.saveUser(user);
+		User user = userService.createNewUser(createUserRequest.getUsername());
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
 	
