@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user_order")
@@ -62,14 +60,6 @@ public class UserOrder {
 
 	public void setTotal(BigDecimal total) {
 		this.total = total;
-	}
-
-	public static UserOrder createFromCart(Cart cart) {
-		UserOrder order = new UserOrder();
-		order.setItems(new ArrayList<>(cart.getItems()));
-		order.setTotal(cart.getTotal());
-		order.setUser(cart.getUser());
-		return order;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package com.example.demo.model.persistence;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -41,7 +42,7 @@ public class Cart {
 
 	public void addPrice(BigDecimal price) {
 		if (total == null) {
-			total = new BigDecimal(0.0);
+			total = new BigDecimal("0.0");
 		}
 
 		total = total.add(price);
@@ -107,6 +108,7 @@ public class Cart {
 		return Objects.hash(id, items, user, total);
 	}
 
+	@JsonIgnore
 	public boolean isEmpty() {
 		return items == null || items.size() == 0;
 	}
