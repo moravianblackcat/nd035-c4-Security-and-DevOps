@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.persistence.Cart;
 import com.example.demo.model.persistence.Item;
-import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.requests.ModifyCartRequest;
 import com.example.demo.service.CartService;
 import com.example.demo.service.ItemService;
@@ -21,10 +20,10 @@ public class CartController {
 	private CartService cartService;
 
 	@Autowired
-	private UserService userService;
+	private ItemService itemService;
 
 	@Autowired
-	private ItemService itemService;
+	private UserService userService;
 	
 	@PostMapping("/addToCart")
 	public Cart addToCart(@RequestBody ModifyCartRequest request) {

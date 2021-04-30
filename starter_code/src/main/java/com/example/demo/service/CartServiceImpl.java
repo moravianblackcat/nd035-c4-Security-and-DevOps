@@ -22,16 +22,16 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart saveCart(Cart cart) {
-        return cartRepository.save(cart);
-    }
-
-    @Override
     public Cart removeItemsAndSave(Cart cart, Item item, int quantity) {
         for (int i = 0; i < quantity; i++) {
             cart.removeItem(item);
             cart.removePrice(item.getPrice());
         }
+        return cartRepository.save(cart);
+    }
+
+    @Override
+    public Cart saveCart(Cart cart) {
         return cartRepository.save(cart);
     }
 }

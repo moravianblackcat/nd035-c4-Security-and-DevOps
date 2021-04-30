@@ -7,7 +7,8 @@ public interface CartService {
 
     Cart addItemsAndSave(Cart cart, Item item, int quantity);
 
+    Cart removeItemsAndSave(Cart cart, Item item, int quantity);
+
     Cart saveCart(Cart cart);
 
-    Cart removeItemsAndSave(Cart cart, Item item, int quantity);
 }

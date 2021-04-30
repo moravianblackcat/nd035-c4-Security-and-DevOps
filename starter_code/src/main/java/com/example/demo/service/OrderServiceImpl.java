@@ -21,6 +21,13 @@ public class OrderServiceImpl implements OrderService {
     private UserService userService;
 
     @Override
+    public List<UserOrder> getOrdersByUsername(String username) {
+        User user = userService.findByUsername(username);
+
+        return orderRepository.findByUser(user);
+    }
+
+    @Override
     public UserOrder submitCart(Cart cart) {
         if (cart.isEmpty()) {
             throw new YouCannotSubmitAnEmptyCart();
@@ -28,13 +35,6 @@ public class OrderServiceImpl implements OrderService {
         UserOrder order = createOrderFromCart(cart);
 
         return orderRepository.save(order);
-    }
-
-    @Override
-    public List<UserOrder> getOrdersByUsername(String username) {
-        User user = userService.findByUsername(username);
-
-        return orderRepository.findByUser(user);
     }
 
     private UserOrder createOrderFromCart(Cart cart) {

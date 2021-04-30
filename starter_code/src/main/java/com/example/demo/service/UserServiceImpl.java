@@ -20,6 +20,17 @@ public class UserServiceImpl implements UserService {
     private CartRepository cartRepository;
 
     @Override
+    public User createNewUser(String username) {
+        User user = new User();
+        user.setUsername(username);
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        user.setCart(cart);
+
+        return userRepository.save(user);
+    }
+
+    @Override
     public User findById(long id) {
         return userRepository.findById(id).orElseThrow(UserWithThisIdWasNotFoundException::new);
     }
@@ -45,17 +56,6 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsUserByUsername(user.getUsername())) {
             throw new UserWithThisUsernameAlreadyExistsException();
         }
-        return userRepository.save(user);
-    }
-
-    @Override
-    public User createNewUser(String username) {
-        User user = new User();
-        user.setUsername(username);
-        Cart cart = new Cart();
-        cartRepository.save(cart);
-        user.setCart(cart);
-
         return userRepository.save(user);
     }
 }

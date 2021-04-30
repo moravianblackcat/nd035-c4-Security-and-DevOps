@@ -6,7 +6,9 @@ import com.example.demo.model.persistence.UserOrder;
 import java.util.List;
 
 public interface OrderService {
-    UserOrder submitCart(Cart cart);
 
     List<UserOrder> getOrdersByUsername(String username);
+
+    UserOrder submitCart(Cart cart);
+
 }
