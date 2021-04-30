@@ -13,6 +13,4 @@ public interface UserService {
 
     Cart getUserCartByUsername(String username);
 
-    User saveUser(User user);
-
 }

@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
         cartRepository.save(cart);
         user.setCart(cart);
 
-        return userRepository.save(user);
+        return saveUser(user);
     }
 
     @Override
@@ -51,8 +51,7 @@ public class UserServiceImpl implements UserService {
         return findByUsername(username).getCart();
     }
 
-    @Override
-    public User saveUser(User user) {
+    private User saveUser(User user) {
         if (userRepository.existsUserByUsername(user.getUsername())) {
             throw new UserWithThisUsernameAlreadyExistsException();
         }

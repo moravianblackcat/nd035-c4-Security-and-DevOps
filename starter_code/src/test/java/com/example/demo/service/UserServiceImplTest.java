@@ -120,9 +120,9 @@ public class UserServiceImplTest {
     public void saveOfNotAlreadyExistingUserSaves() {
         when(userRepository.existsUserByUsername(anyString())).thenReturn(false);
 
-        cut.saveUser(user);
+        cut.createNewUser("username");
 
-        verify(userRepository, times(1)).save(user);
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
@@ -130,7 +130,7 @@ public class UserServiceImplTest {
         when(userRepository.existsUserByUsername((user.getUsername()))).thenReturn(true);
 
         assertThrows(UserWithThisUsernameAlreadyExistsException.class,
-                () -> cut.saveUser(user),
+                () -> cut.createNewUser(user.getUsername()),
                 "Save user operation didn't throw an error, although given user already exists.");
     }
 
