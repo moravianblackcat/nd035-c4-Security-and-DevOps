@@ -1,20 +1,14 @@
 package com.example.demo.controller;
 
+import com.example.demo.controller.base.OrderControllerTestBase;
 import com.example.demo.model.persistence.Cart;
 import com.example.demo.model.persistence.Item;
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.UserOrder;
-import com.example.demo.service.OrderService;
-import com.example.demo.service.UserService;
 import com.example.demo.service.exception.UserWithThisUsernameWasNotFoundException;
 import com.example.demo.service.exception.YouCannotSubmitAnEmptyCart;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,21 +23,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(OrderController.class)
-class OrderControllerTest {
-
-    private final String SUBMIT_ENDPOINT = "/api/order/submit/ghost";
-    private final String HISTORY_ENDPOINT = "/api/order/history/ghost";
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private OrderService orderService;
-
-    @MockBean
-    private UserService userService;
+@WithMockUser
+public class OrderControllerAuthenticatedUserTest extends OrderControllerTestBase {
 
     @Test
     public void orderSubmitReturnsOverview() throws Exception {

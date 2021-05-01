@@ -4,9 +4,12 @@ import com.example.demo.model.persistence.Cart;
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
+import com.example.demo.service.exception.InvalidPasswordException;
 import com.example.demo.service.exception.UserWithThisIdWasNotFoundException;
 import com.example.demo.service.exception.UserWithThisUsernameAlreadyExistsException;
 import com.example.demo.service.exception.UserWithThisUsernameWasNotFoundException;
+import com.example.demo.service.strategy.PasswordCreationStrategy;
+import com.example.demo.service.strategy.PasswordValidationStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +33,12 @@ public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordValidationStrategy passwordValidationStrategy;
+
+    @Mock
+    private PasswordCreationStrategy passwordCreationStrategy;
 
     @InjectMocks
     private UserService cut = new UserServiceImpl();
@@ -55,7 +64,9 @@ public class UserServiceImplTest {
         user.setCart(empty);
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        User newUser = cut.createNewUser(username);
+        when(passwordValidationStrategy.isValid(anyString(), anyString())).thenReturn(true);
+
+        User newUser = cut.createNewUser(username, "password", "password");
 
         assertEquals(username, newUser.getUsername());
         assertTrue(newUser.hasEmptyCart());
@@ -117,21 +128,38 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void saveOfNotAlreadyExistingUserSaves() {
+    public void creationOfNotAlreadyExistingUserSaves() {
         when(userRepository.existsUserByUsername(anyString())).thenReturn(false);
+        when(passwordValidationStrategy.isValid(anyString(), anyString())).thenReturn(true);
 
-        cut.createNewUser("username");
+        cut.createNewUser("username", "password", "password");
 
         verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
-    public void saveOfAlreadyExistingUserThrowsAnError() {
+    public void creationOfAlreadyExistingUserThrowsAnError() {
         when(userRepository.existsUserByUsername((user.getUsername()))).thenReturn(true);
+        when(passwordValidationStrategy.isValid(anyString(), anyString())).thenReturn(true);
 
         assertThrows(UserWithThisUsernameAlreadyExistsException.class,
-                () -> cut.createNewUser(user.getUsername()),
+                () -> cut.createNewUser(user.getUsername(), "password", "password"),
                 "Save user operation didn't throw an error, although given user already exists.");
     }
 
+    @Test
+    public void creationWithValidPasswordSucceeds() {
+        when(passwordValidationStrategy.isValid(anyString(), anyString())).thenReturn(true);
+
+        cut.createNewUser("New User", "password", "password");
+    }
+
+    @Test
+    public void creationWithInvalidPasswordFails() {
+        when(passwordValidationStrategy.isValid(anyString(), anyString())).thenReturn(false);
+
+        assertThrows(InvalidPasswordException.class,
+                () -> cut.createNewUser("username", "invalid", "invalid"),
+                "Save user operation didn't throw an error, although given password doesn't meet the criteria.");
+    }
 }

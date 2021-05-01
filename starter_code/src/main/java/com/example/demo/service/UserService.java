@@ -5,7 +5,7 @@ import com.example.demo.model.persistence.User;
 
 public interface UserService {
 
-    User createNewUser(String username);
+    User createNewUser(String username, String password, String confirmPassword);
 
     User findById(long id);
 

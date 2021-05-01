@@ -4,9 +4,12 @@ import com.example.demo.model.persistence.Cart;
 import com.example.demo.model.persistence.User;
 import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.UserRepository;
+import com.example.demo.service.exception.InvalidPasswordException;
 import com.example.demo.service.exception.UserWithThisIdWasNotFoundException;
 import com.example.demo.service.exception.UserWithThisUsernameAlreadyExistsException;
 import com.example.demo.service.exception.UserWithThisUsernameWasNotFoundException;
+import com.example.demo.service.strategy.PasswordCreationStrategy;
+import com.example.demo.service.strategy.PasswordValidationStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +22,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CartRepository cartRepository;
 
-    @Override
-    public User createNewUser(String username) {
-        User user = new User();
-        user.setUsername(username);
-        Cart cart = new Cart();
-        cartRepository.save(cart);
-        user.setCart(cart);
+    @Autowired
+    private PasswordValidationStrategy passwordValidationStrategy;
 
-        return saveUser(user);
+    @Autowired
+    private PasswordCreationStrategy passwordCreationStrategy;
+
+    @Override
+    public User createNewUser(String username, String password, String confirmPassword) {
+        User user = createUser(username);
+        setPasswordToUser(password, confirmPassword, user);
+        addEmptyCartToUser(user);
+
+        return userRepository.save(user);
     }
 
     @Override
@@ -51,10 +58,27 @@ public class UserServiceImpl implements UserService {
         return findByUsername(username).getCart();
     }
 
-    private User saveUser(User user) {
-        if (userRepository.existsUserByUsername(user.getUsername())) {
+    private User createUser(String username) {
+        if (userRepository.existsUserByUsername(username)) {
             throw new UserWithThisUsernameAlreadyExistsException();
         }
-        return userRepository.save(user);
+        User user = new User();
+        user.setUsername(username);
+        return user;
     }
+
+    private void setPasswordToUser(String password, String confirmPassword, User user) {
+        if (passwordValidationStrategy.isValid(password, confirmPassword)) {
+            user.setPassword(passwordCreationStrategy.generateEncodedPassword(password));
+        } else {
+            throw new InvalidPasswordException();
+        }
+    }
+
+    private void addEmptyCartToUser(User user) {
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        user.setCart(cart);
+    }
+
 }

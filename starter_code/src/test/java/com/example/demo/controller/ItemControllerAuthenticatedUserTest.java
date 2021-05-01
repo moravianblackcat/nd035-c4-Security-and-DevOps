@@ -1,16 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.controller.base.ItemControllerTestBase;
 import com.example.demo.model.persistence.Item;
-import com.example.demo.service.ItemService;
 import com.example.demo.service.exception.ItemWithThisIdWasNotFoundException;
 import com.example.demo.service.exception.ItemWithThisNameWasNotFoundException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,15 +18,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(ItemController.class)
-public class ItemControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private ItemService itemService;
+@WithMockUser
+public class ItemControllerAuthenticatedUserTest extends ItemControllerTestBase {
 
     @Test
     public void getItemsReturnsAllItems() throws Exception {
@@ -96,6 +84,8 @@ public class ItemControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(status().reason("Item with this name was not found."));
     }
+
+
 
     private List<Item> getDummyItems() {
         Item window = new Item();
