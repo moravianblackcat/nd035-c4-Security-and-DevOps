@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -45,7 +46,7 @@ public class OrderServiceImplTest {
     public void submitCartCreatesAndSavesOrder() {
         Cart cart = new Cart();
         Item item = new Item();
-        List<Item> items = List.of(item);
+        List<Item> items = Arrays.asList(item);
         cart.setItems(items);
         BigDecimal total = new BigDecimal("20.5");
         cart.setTotal(total);
@@ -77,7 +78,7 @@ public class OrderServiceImplTest {
         order2.setUser(user);
 
         when(userService.findByUsername(anyString())).thenReturn(user);
-        when(orderRepository.findByUser(user)).thenReturn(List.of(order1, order2));
+        when(orderRepository.findByUser(user)).thenReturn(Arrays.asList(order1, order2));
 
         List<UserOrder> orders = cut.getOrdersByUsername("username");
         assertEquals(2, orders.size());

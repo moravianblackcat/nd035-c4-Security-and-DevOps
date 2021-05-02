@@ -13,6 +13,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -46,7 +47,7 @@ public class CartControllerAuthenticatedUserTest extends CartControllerTestBase 
         when(itemService.findById(anyLong())).thenReturn(item);
         Cart empty = createCart(cartId, user, cartTotal, new ArrayList<>());
         when(userService.getUserCartByUsername(anyString())).thenReturn(empty);
-        List<Item> cartItems = new ArrayList<>(List.of(item, item));
+        List<Item> cartItems = Arrays.asList(new Item[]{item, item});
         Cart withItems = createCart(cartId, user, cartTotal, cartItems);
         when(cartService.addItemsAndSave(any(Cart.class), any(Item.class), anyInt())).thenReturn(withItems);
 
@@ -113,7 +114,7 @@ public class CartControllerAuthenticatedUserTest extends CartControllerTestBase 
         User user = createUser(username, userId);
         Item item = createItem(itemId, itemName, description, itemPrice);
         when(itemService.findById(anyLong())).thenReturn(item);
-        List<Item> cartItems = new ArrayList<>(List.of(item, item));
+        List<Item> cartItems = Arrays.asList(new Item[]{item, item});
         Cart withItems = createCart(cartId, user, cartTotal, cartItems);
         when(userService.getUserCartByUsername(anyString())).thenReturn(withItems);
         Cart empty = createCart(cartId, user, cartTotal, new ArrayList<>());

@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +34,13 @@ public class ItemServiceImplTest {
         Item item1 = new Item();
         Item item2 = new Item();
 
-        when(itemRepository.findAll()).thenReturn(List.of(item1, item2));
+        when(itemRepository.findAll()).thenReturn(Arrays.asList(item1, item2));
 
         List<Item> items = cut.findAll();
         assertEquals(2,
                 items.size(),
                 "Find all items operation returns incorrect number of items.");
-        assertEquals(List.of(item1, item2),
+        assertEquals(Arrays.asList(item1, item2),
                 items,
                 "Find all items operation returns incorrect list of items.");
     }
@@ -69,7 +70,7 @@ public class ItemServiceImplTest {
         Item test = createItem();
         Item anotherTest = createItem();
 
-        List<Item> items = List.of(test, anotherTest);
+        List<Item> items = Arrays.asList(test, anotherTest);
         when(itemRepository.findByName(anyString())).thenReturn(items);
 
         List<Item> returned = cut.findByName("Item");
@@ -84,7 +85,7 @@ public class ItemServiceImplTest {
 
     @Test
     public void findByNameThrowsAnErrorIfNoItemWithSuchNameExists() {
-        when(itemRepository.findByName(anyString())).thenReturn(List.of());
+        when(itemRepository.findByName(anyString())).thenReturn(Arrays.asList());
 
         assertThrows(ItemWithThisNameWasNotFoundException.class,
                 () -> cut.findByName("name"),

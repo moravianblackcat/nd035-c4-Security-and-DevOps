@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -94,7 +95,7 @@ public class ItemControllerAuthenticatedUserTest extends ItemControllerTestBase 
         window.setDescription("Best window.");
         window.setPrice(new BigDecimal("21.13"));
 
-        return List.of(window, window);
+        return Arrays.asList(new Item[]{window, window});
     }
 
 }

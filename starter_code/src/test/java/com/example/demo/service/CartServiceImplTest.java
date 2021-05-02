@@ -11,12 +11,12 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 public class CartServiceImplTest {
@@ -44,7 +44,7 @@ public class CartServiceImplTest {
     public void addItemsAndSaveAddsItems() {
         cut.addItemsAndSave(cart, item, quantity);
 
-        assertIterableEquals(List.of(item, item), cart.getItems());
+        assertIterableEquals(Arrays.asList(item, item), cart.getItems());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class CartServiceImplTest {
         cart.addItem(item);
         cut.removeItemsAndSave(cart, item, quantity);
 
-        assertIterableEquals(List.of(), cart.getItems());
+        assertIterableEquals(Arrays.asList(), cart.getItems());
     }
 
     @Test

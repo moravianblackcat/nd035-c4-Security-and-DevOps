@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -44,10 +45,10 @@ public class SimplePasswordValidationStrategyTest {
     }
 
     private static List<Arguments> nullValues() {
-        return List.of(
+        return Arrays.asList(new Arguments[]{
                 Arguments.of(null, "confirmPassword"),
                 Arguments.of("password", null),
-                Arguments.of(null, null)
+                Arguments.of(null, null)}
         );
     }
     

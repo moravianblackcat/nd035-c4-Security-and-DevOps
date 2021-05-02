@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -38,7 +38,7 @@ public class OrderControllerAuthenticatedUserTest extends OrderControllerTestBas
         item.setPrice(price);
         String description = "Description";
         item.setDescription(description);
-        userOrder.setItems(List.of(item));
+        userOrder.setItems(Arrays.asList(item));
         userOrder.setTotal(price);
 
         when(orderService.submitCart(any())).thenReturn(userOrder);
@@ -93,10 +93,10 @@ public class OrderControllerAuthenticatedUserTest extends OrderControllerTestBas
         UserOrder order = new UserOrder();
         order.setId(1L);
         order.setUser(user);
-        order.setItems(List.of(item));
+        order.setItems(Arrays.asList(item));
         order.setTotal(new BigDecimal("2.0"));
 
-        when(orderService.getOrdersByUsername(anyString())).thenReturn(List.of(order));
+        when(orderService.getOrdersByUsername(anyString())).thenReturn(Arrays.asList(order));
 
         mockMvc.perform(get(HISTORY_ENDPOINT))
                 .andExpect(status().isOk())
