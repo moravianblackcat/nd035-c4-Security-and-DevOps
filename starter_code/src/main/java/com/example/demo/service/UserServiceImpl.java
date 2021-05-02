@@ -58,6 +58,15 @@ public class UserServiceImpl implements UserService {
         return findByUsername(username).getCart();
     }
 
+    @Override
+    public void setNewEmptyCartForTheUser(User user) {
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+
+        user.setCart(cart);
+        userRepository.save(user);
+    }
+
     private User createUser(String username) {
         if (userRepository.existsUserByUsername(username)) {
             throw new UserWithThisUsernameAlreadyExistsException();

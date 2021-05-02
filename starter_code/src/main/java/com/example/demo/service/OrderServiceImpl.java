@@ -42,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
         order.setItems(new ArrayList<>(cart.getItems()));
         order.setTotal(cart.getTotal());
         order.setUser(cart.getUser());
+        userService.setNewEmptyCartForTheUser(order.getUser());
 
         return order;
     }

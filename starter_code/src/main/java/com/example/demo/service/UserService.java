@@ -13,4 +13,5 @@ public interface UserService {
 
     Cart getUserCartByUsername(String username);
 
+    void setNewEmptyCartForTheUser(User user);
 }

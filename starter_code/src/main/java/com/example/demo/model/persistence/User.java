@@ -79,4 +79,9 @@ public class User {
 	public int hashCode() {
 		return Objects.hash(id, username, cart);
 	}
+
+	@Override
+	public String toString() {
+		return username + " [id=" + id + "]";
+	}
 }
